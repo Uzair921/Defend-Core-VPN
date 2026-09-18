@@ -1,64 +1,80 @@
 package engine
 
 import (
-	"net"
-	"sync"
-	"time"
+"net"
+"sync"
+"time"
 
-	noisepkg "defendcore-vpn/internal/vpn/noise"
-	"defendcore-vpn/internal/policy"
+"defendcore-vpn/internal/policy"
+noisepkg "defendcore-vpn/internal/vpn/noise"
 )
 
-// Session represents an established Noise session with a peer.
 type Session struct {
-	Noise     *noisepkg.Session
-	PeerAddr  *net.UDPAddr
-	CreatedAt time.Time
-	LastSeen  time.Time
-	BytesIn   uint64
-	BytesOut  uint64
-	BackendID string // session ID from backend
-	UserID    string
-	DeviceID  string
-	AssignedIP string // client's tunnel IP (e.g. 10.8.0.2)
-	PolicyEngine *policy.Engine // access policy engine
-	mu        sync.Mutex
+ID         string
+UserID     string
+DeviceID   string
+BackendID  string
+AssignedIP net.IP
+Noise      *noisepkg.Session
+PeerAddr   *net.UDPAddr
+Policy     *policy.Engine
+CreatedAt  time.Time
+LastSeen   time.Time
+BytesIn    uint64
+BytesOut   uint64
+mu         sync.Mutex
+}
+
+func (s *Session) Touch() {
+s.mu.Lock()
+s.LastSeen = time.Now()
+s.mu.Unlock()
 }
 
 func (s *Session) AddIn(n uint64) {
-	s.mu.Lock()
-	s.BytesIn += n
-	s.LastSeen = time.Now()
-	s.mu.Unlock()
+s.mu.Lock()
+s.BytesIn += n
+s.LastSeen = time.Now()
+s.mu.Unlock()
 }
 
 func (s *Session) AddOut(n uint64) {
-	s.mu.Lock()
-	s.BytesOut += n
-	s.mu.Unlock()
+s.mu.Lock()
+s.BytesOut += n
+s.mu.Unlock()
 }
 
 func (s *Session) Stats() (in, out uint64) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	return s.BytesIn, s.BytesOut
+s.mu.Lock()
+defer s.mu.Unlock()
+return s.BytesIn, s.BytesOut
 }
 
-// StatsReporter allows callbacks when stats change.
-type StatsReporter func(s *Session)
+func (s *Session) IdleFor() time.Duration {
+s.mu.Lock()
+defer s.mu.Unlock()
+return time.Since(s.LastSeen)
+}
 
-// Config holds engine configuration.
 type Config struct {
-	ServerHost   string
-	ServerPort   int
-	TUNName      string
-	TUNIP        string
-	TUNMask      string
-	TUNMTU       int
-	AssignedCIDR string
-	ServerPubKey []byte
-	ServerPriv   []byte
-	ClientMode   bool
-	UserID       string
-	DeviceID     string
+ServerHost   string
+ServerPort   int
+TUNName      string
+TUNIP        string
+TUNMask      string
+TUNMTU       int
+AssignedCIDR string
+ServerPubKey []byte
+ServerPriv   []byte
+ClientMode   bool
+UserID       string
+DeviceID     string
+IdleTimeout  time.Duration
+}
+
+func (c *Config) idleTimeout() time.Duration {
+if c.IdleTimeout > 0 {
+return c.IdleTimeout
+}
+return 3 * time.Minute
 }
