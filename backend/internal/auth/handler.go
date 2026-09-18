@@ -8,9 +8,9 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"vpn.local/backend/internal/httputil"
-	"vpn.local/backend/internal/middleware"
-	"vpn.local/backend/internal/users"
+	"defendcore-vpn/internal/httputil"
+	"defendcore-vpn/internal/middleware"
+	"defendcore-vpn/internal/users"
 )
 
 type Handler struct {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/auth-store";
 import { LogOut, Shield, User as UserIcon } from "lucide-react";
@@ -77,8 +78,46 @@ export default function DashboardPage() {
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
             <h2 className="font-semibold mb-4">VPN Status</h2>
-            <div className="text-sm text-zinc-400">
-              No devices registered yet. Device management coming soon.
+            <div className="text-sm text-zinc-400 mb-4">
+              Manage your VPN devices and download configs.
+            </div>
+            <div className="flex gap-2">
+              <Link
+                href="/dashboard/devices"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition text-sm"
+              >
+                Manage Devices
+              </Link>
+              <Link
+                href="/dashboard/sessions"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded font-medium transition text-sm"
+              >
+                View Sessions
+              </Link>
+              <Link
+                href="/dashboard/policies"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded font-medium transition text-sm"
+              >
+                Access Policies
+              </Link>
+              <Link
+                href="/dashboard/vpn/services"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition text-sm"
+              >
+                VPN Services
+              </Link>
+              <Link
+                href="/dashboard/superadmin"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-medium transition text-sm"
+              >
+                SuperAdmin
+              </Link>
+              <Link
+                href="/dashboard/org"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition text-sm"
+              >
+                My Organization
+              </Link>
             </div>
           </div>
         </div>

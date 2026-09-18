@@ -1,0 +1,41 @@
+                                     Table "public.users"
+         Column         |           Type           | Collation | Nullable |      Default      
+------------------------+--------------------------+-----------+----------+-------------------
+ id                     | uuid                     |           | not null | gen_random_uuid()
+ email                  | text                     |           | not null | 
+ password_hash          | text                     |           | not null | 
+ role                   | text                     |           | not null | 'user'::text
+ status                 | text                     |           | not null | 'active'::text
+ created_at             | timestamp with time zone |           | not null | now()
+ updated_at             | timestamp with time zone |           | not null | now()
+ is_superadmin          | boolean                  |           | not null | false
+ organization_id        | uuid                     |           |          | 
+ invited_by             | uuid                     |           |          | 
+ invitation_accepted_at | timestamp with time zone |           |          | 
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "idx_users_email" btree (email)
+    "idx_users_org" btree (organization_id)
+    "idx_users_superadmin" btree (is_superadmin)
+    "users_email_key" UNIQUE CONSTRAINT, btree (email)
+Foreign-key constraints:
+    "users_invited_by_fkey" FOREIGN KEY (invited_by) REFERENCES users(id)
+    "users_organization_id_fkey" FOREIGN KEY (organization_id) REFERENCES organizations(id)
+Referenced by:
+    TABLE "access_policies" CONSTRAINT "access_policies_created_by_fkey" FOREIGN KEY (created_by) REFERENCES users(id)
+    TABLE "access_policies" CONSTRAINT "access_policies_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "audit_logs" CONSTRAINT "audit_logs_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    TABLE "devices" CONSTRAINT "devices_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "dns_policies" CONSTRAINT "dns_policies_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "organization_users" CONSTRAINT "organization_users_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "platform_audit" CONSTRAINT "platform_audit_actor_id_fkey" FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE SET NULL
+    TABLE "policy_group_members" CONSTRAINT "policy_group_members_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "refresh_tokens" CONSTRAINT "refresh_tokens_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "sessions" CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "user_vpn_services" CONSTRAINT "user_vpn_services_granted_by_fkey" FOREIGN KEY (granted_by) REFERENCES users(id) ON DELETE SET NULL
+    TABLE "user_vpn_services" CONSTRAINT "user_vpn_services_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "users" CONSTRAINT "users_invited_by_fkey" FOREIGN KEY (invited_by) REFERENCES users(id)
+    TABLE "vpn_configs" CONSTRAINT "vpn_configs_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    TABLE "vpn_service_audit" CONSTRAINT "vpn_service_audit_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    TABLE "vpn_services" CONSTRAINT "vpn_services_owner_user_id_fkey" FOREIGN KEY (owner_user_id) REFERENCES users(id) ON DELETE SET NULL
+

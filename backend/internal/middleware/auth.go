@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"vpn.local/backend/internal/authcore"
-	"vpn.local/backend/internal/httputil"
+	"defendcore-vpn/internal/authcore"
+	"defendcore-vpn/internal/httputil"
 )
 
 type contextKey string
@@ -17,6 +17,7 @@ const (
 	UserIDKey contextKey = "user_id"
 	EmailKey  contextKey = "email"
 	RoleKey   contextKey = "role"
+	OrgIDKey  contextKey = "org_id"
 )
 
 func Auth(validator authcore.TokenValidator) func(http.Handler) http.Handler {
@@ -56,4 +57,11 @@ func UserIDFromContext(ctx context.Context) (uuid.UUID, bool) {
 func RoleFromContext(ctx context.Context) (string, bool) {
 	role, ok := ctx.Value(RoleKey).(string)
 	return role, ok
+}
+
+// OrgIDFromContext returns the organization ID associated with the request.
+// The tenant middleware populates this value when a user belongs to an org.
+func OrgIDFromContext(ctx context.Context) (uuid.UUID, bool) {
+id, ok := ctx.Value(OrgIDKey).(uuid.UUID)
+return id, ok
 }

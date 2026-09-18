@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"vpn.local/backend/internal/users"
+	"defendcore-vpn/internal/users"
 )
 
 var (

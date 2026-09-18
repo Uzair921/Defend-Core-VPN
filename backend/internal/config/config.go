@@ -59,6 +59,7 @@ type VPNConfig struct {
 	Port      int
 	Interface string
 	Subnet    string
+	APIKey    string
 }
 
 type CORSConfig struct {
@@ -102,6 +103,7 @@ func Load() (*Config, error) {
 			Port:      vpnPort,
 			Interface: getEnv("VPN_INTERFACE", "dcvpn0"),
 			Subnet:    getEnv("VPN_SUBNET", "10.8.0.0/24"),
+			APIKey:    getEnv("VPN_API_KEY", ""),
 		},
 		CORS: CORSConfig{
 			AllowedOrigins: parseCORSOrigins(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000")),

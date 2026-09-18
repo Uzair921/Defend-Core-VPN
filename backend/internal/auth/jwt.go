@@ -10,7 +10,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 
-	"vpn.local/backend/internal/authcore"
+	"defendcore-vpn/internal/authcore"
 )
 
 var (

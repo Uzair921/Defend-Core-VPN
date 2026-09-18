@@ -7,7 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"vpn.local/backend/internal/config"
+	"defendcore-vpn/internal/config"
 )
 
 type DB struct {

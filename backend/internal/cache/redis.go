@@ -7,7 +7,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"vpn.local/backend/internal/config"
+	"defendcore-vpn/internal/config"
 )
 
 type Cache struct {
