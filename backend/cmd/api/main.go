@@ -64,7 +64,7 @@ func main() {
 	// Devices
 	devicesRepo := devices.NewRepository(database.Pool)
 	devicesSvc := devices.NewService(devicesRepo, os.Getenv("VPN_SERVER_PUBLIC_KEY"))
-	devicesHandler := devices.NewHandler(devicesSvc, "192.168.174.132", cfg.VPN.Port)
+	devicesHandler := devices.NewHandler(devicesSvc, envOr("VPN_PUBLIC_HOST", "127.0.0.1"), cfg.VPN.Port)
 
 	// Access policies
 	policyRepo := policy.NewRepository(database.Pool)
@@ -249,4 +249,11 @@ r.Get("/invoices", orgsHandler.ListMyInvoices)
 		log.Fatalf("shutdown failed: %v", err)
 	}
 	log.Println("server stopped")
+}
+
+func envOr(key, fallback string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return fallback
 }

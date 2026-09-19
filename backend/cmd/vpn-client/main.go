@@ -24,7 +24,7 @@ func main() {
 		cfg := engine.Config{
 		ServerHost:   serverHost,
 		ServerPort:   51820,
-		TUNName:      "dcvpn0",
+		TUNName:      getenv("VPN_TUN_NAME", "dcvpn-cli"),
 		TUNIP:        "10.8.0.2/24",
 		TUNMask:      "255.255.255.0",
 		TUNMTU:       1420,
